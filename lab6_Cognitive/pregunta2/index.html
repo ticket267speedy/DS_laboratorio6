@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Pregunta 2 | Descarga sencilla</title>
+    <!--
+      Vista mínima tipo demo:
+      - Un único formulario POST donde el backend decide si hace descarga directa (requests)
+        o usa yt-dlp para plataformas.
+      - Se muestran mensajes informativos y, cuando hay archivo válido, el enlace de descarga.
+
+      Decisiones:
+      - Usamos {{ url }} para persistir el valor ingresado tras el POST.
+      - Mostramos {{ msg }} para feedback (éxito/errores/advertencias).
+      - Mostramos el enlace de descarga sólo si existe un archivo guardado ({{ saved }} no es None).
+      - url_for('download', filename=saved) genera el enlace correctamente con quoting, evitando 404 por
+        caracteres especiales en el filename.
+    -->
+</head>
+<body>
+    <h1>Descargar desde URL directo</h1>
+
+    <!-- Formulario principal. El input type="url" pide un enlace que puede ser:
+         - Directo a archivo (.mp4/.webm/.ogg/.mov)
+         - URL de plataforma (Instagram/YouTube/TikTok), que se manejará con yt-dlp en el backend. -->
+    <form method="post">
+        <label>URL:</label>
+        <input type="url" name="url" value="{{ url }}" placeholder="https://ejemplo.com/video.mp4" required />
+        <button type="submit">Descargar</button>
+    </form>
+
+    <!-- Mensaje de resultado/estado de la última operación -->
+    {% if msg %}
+        <p>{{ msg }}</p>
+    {% endif %}
+
+    <!-- Enlace de descarga: sólo aparece cuando el backend confirma que se guardó un archivo válido -->
+    {% if saved %}
+        <p><a href="{{ url_for('download', filename=saved) }}" target="_blank">Descargar archivo</a></p>
+    {% endif %}
+
+    <!-- Nota informativa sobre el comportamiento -->
+    <p>Nota:
+        - Si es un enlace directo a archivo (.mp4/.webm), se descarga tal cual.
+        - Si es un enlace de plataforma (Instagram/YouTube/TikTok), se intenta descargar usando yt-dlp.
+          En algunos casos estas plataformas pueden requerir inicio de sesión/cookies.
+    </p>
+</body>
+</html>

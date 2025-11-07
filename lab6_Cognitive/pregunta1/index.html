@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Pokémon | Consulta básica</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin-bottom: 20px; }
+        .error { color: #b00020; margin: 10px 0; }
+        .section { margin-top: 20px; }
+        .sprites { display: grid; grid-template-columns: repeat(2, 200px); gap: 10px; }
+        .sprite { text-align: center; }
+        img { max-width: 180px; }
+    </style>
+    <!-- Página sencilla con formulario para consultar PokeAPI -->
+</head>
+<body>
+    <h1>Consulta de Pokémon (PokeAPI)</h1>
+
+    <form method="post">
+        <label for="pokemon">Nombre del Pokémon:</label>
+        <input type="text" id="pokemon" name="pokemon" placeholder="Ej: pikachu" required />
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+    {% endif %}
+
+    {% if pokemon_name %}
+        <div class="section">
+            <h2>Resultado: {{ pokemon_name }}</h2>
+
+            <h3>Tipos</h3>
+            {% if types %}
+                <ul>
+                {% for t in types %}
+                    <li>{{ t }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>N/A</p>
+            {% endif %}
+
+            <h3>Movimientos (primeros 15)</h3>
+            {% if moves %}
+                <ul>
+                {% for m in moves %}
+                    <li>{{ m }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>N/A</p>
+            {% endif %}
+
+            <h3>Imágenes</h3>
+            <div class="sprites">
+                <div class="sprite">
+                    <strong>De frente</strong><br>
+                    {% if sprites.front_default %}
+                        <img src="{{ sprites.front_default }}" alt="front_default">
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </div>
+                <div class="sprite">
+                    <strong>De frente Shiny</strong><br>
+                    {% if sprites.front_shiny %}
+                        <img src="{{ sprites.front_shiny }}" alt="front_shiny">
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </div>
+                <div class="sprite">
+                    <strong>De espalda Default</strong><br>
+                    {% if sprites.back_default %}
+                        <img src="{{ sprites.back_default }}" alt="back_default">
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </div>
+                <div class="sprite">
+                    <strong>De espalda Shiny</strong><br>
+                    {% if sprites.back_shiny %}
+                        <img src="{{ sprites.back_shiny }}" alt="back_shiny">
+                    {% else %}
+                        <span>N/A</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</body>
+</html>
